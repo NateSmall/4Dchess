@@ -34,7 +34,7 @@ func get_piece(w, x, y, z):
 	var child = get_child(0)
 	return child.get_piece()
 	
-func get_tile(w, x, y, z): #FIXXXX
+func get_tile(w, x, y, z):
 	return self.get_parent().get_tile(w, x, y, z)
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):

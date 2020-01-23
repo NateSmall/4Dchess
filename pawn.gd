@@ -53,10 +53,9 @@ func _ready():
 func moveValid(ptilecurrent, ptiletarget):
 	if (ptilecurrent.get_piece().get_type() == 'none'):
 		return false
-	print(pathTilesEmpty(ptiletarget), ' / ', validMoveForPiece(ptiletarget))
-	print(pathTileEnemy(ptiletarget), " <> ", validAttackForPiece(ptiletarget))
 	if (pathTilesEmpty(ptiletarget) and validMoveForPiece(ptiletarget)):
 		return true
+	return false
 		
 func attackValid(ptile):
 	if (pathTileEnemy(ptile) and validAttackForPiece(ptile)):
@@ -75,7 +74,15 @@ func validMoveForPiece(ptileTarget):
 	var tcords = ptileTarget.get_cordinates()
 	print(side)
 	if (side == 'b'):
-		print('unfilled side')
+		var ccords = self.get_cordinates()
+		var dimentionsmoved = 0
+		if (ccords[0] - 1 == tcords[0]):
+			if (ccords[1] == tcords [1] and ccords[3] == tcords[3]):
+				return true
+		elif (ccords[2] - 1 == tcords[2]):
+			if (ccords[1] == tcords [1] and ccords[3] == tcords[3]):
+				return true
+		return false
 	elif (side == 'w'):
 		var ccords = self.get_cordinates()
 		var dimentionsmoved = 0
@@ -92,7 +99,24 @@ func validAttackForPiece(ptileTarget):
 	print(side)
 	var ccords = self.get_cordinates()
 	if (side == 'b'):
-		print('unfilled side')
+		# if moving forward in w
+		if (ccords[0] - 1 == tcords[0]):
+			print(4)
+			if (ccords[1] + 1 == tcords[1] or ccords[1] - 1 == tcords[1]):
+				if (ccords[3] == tcords[3] and ccords[2] == tcords[2]):
+					return true
+			elif (ccords[3] + 1 == tcords[3] or ccords[3] - 1 == tcords[3]):
+				if (ccords[1] == tcords[1] and ccords[2] == tcords[2]):
+					return true
+		# if moving forward in y
+		elif (ccords[2] - 1 == tcords[2]):
+			print(3)
+			if (ccords[1] + 1 == tcords[1] or ccords[1] - 1 == tcords[1]):
+				if (ccords[3] == tcords[3] and ccords[0] == tcords[0]):
+					return true
+			elif (ccords[3] + 1 == tcords[3] or ccords[3] - 1 == tcords[3]):
+				if (ccords[1] == tcords[1] and ccords[0] == tcords[0]):
+					return true
 	elif (side == 'w'):
 		# if moving forward in w
 		if (ccords[0] + 1 == tcords[0]):

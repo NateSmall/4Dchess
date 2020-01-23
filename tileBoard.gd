@@ -50,7 +50,7 @@ func _ready():
                 	collision.set_shape(rec)
                 	tileAreaArray[w][x][y][z].add_child(collision)
 	var wp1 = pawnclass.new(0, 1, 0, 0, 'w')
-	var bp1 = pawnclass.new(0, 2, 1, 0, 'b')
+	var bp1 = pawnclass.new(2, 2, 2, 0, 'b')
 	place_piece(wp1)
 	place_piece(bp1)
 
