@@ -5,6 +5,7 @@ var tileclass = load("tile.gd")
 var tileareaclass = load("TileArea2D.gd")
 var tilecollsionclass = load("res://TileCollisionShape2D.gd")
 var noneclass = preload("none.gd")
+var rookclass = preload('rook.gd')
 # Declare member variables here. Examples:
 # var a = 2
 # var b = "text"
@@ -51,8 +52,13 @@ func _ready():
                 	tileAreaArray[w][x][y][z].add_child(collision)
 	var wp1 = pawnclass.new(0, 1, 0, 0, 'w')
 	var bp1 = pawnclass.new(2, 2, 2, 0, 'b')
-	place_piece(wp1)
-	place_piece(bp1)
+	var wr1 = rookclass.new(2, 2, 2, 2, 'w')
+	var br1 = rookclass.new(0, 0, 0, 0, 'b')
+	place_pieces([wp1, bp1, wr1, br1])
+	
+func place_pieces(ppieces):
+	for piece in ppieces:
+		place_piece(piece)
 
 func place_piece(ppiece):
 	var cordinates = ppiece.get_cordinates()
