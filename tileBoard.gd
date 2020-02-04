@@ -1,11 +1,15 @@
 extends Node2D
 
-var pawnclass = preload("pawn.gd")
+var pawn = preload("pawn.gd")
 var tileclass = load("tile.gd")
 var tileareaclass = load("TileArea2D.gd")
 var tilecollsionclass = load("res://TileCollisionShape2D.gd")
-var noneclass = preload("none.gd")
-var rookclass = preload('rook.gd')
+var none = preload("none.gd")
+var rook = preload('rook.gd')
+var bishop = preload("bishop.gd")
+var knight = preload("knight.gd")
+var king = preload('king.gd')
+var queen = preload('queen.gd')
 # Declare member variables here. Examples:
 # var a = 2
 # var b = "text"
@@ -17,6 +21,7 @@ var firstclick = null
 var secondclickused = false
 var secondclick = null
 var firstclickpiece = null
+var blackturn = false
 #		for z in range(boardDimention):
 #			tileArray[x][y]
 
@@ -40,7 +45,7 @@ func _ready():
             	tileArray[w][x].append([])
             	for z in range(boardDimention):
                 	tileArray[w][x][y].append([])
-                	var nonepiece = noneclass.new()
+                	var nonepiece = none.new()
                 	tileArray[w][x][y][z] = tile.new(w, x, y, z, nonepiece)
                 	print(tileArray[w][x][y][z].get_piece())
                 	self.add_child(tileAreaArray[w][x][y][z])
@@ -50,15 +55,55 @@ func _ready():
                 	var collision = CollisionShape2D.new()
                 	collision.set_shape(rec)
                 	tileAreaArray[w][x][y][z].add_child(collision)
-	var wp1 = pawnclass.new(0, 1, 0, 0, 'w')
-	var bp1 = pawnclass.new(2, 2, 2, 0, 'b')
-	var wr1 = rookclass.new(2, 2, 2, 2, 'w')
-	var br1 = rookclass.new(0, 0, 0, 0, 'b')
-	place_pieces([wp1, bp1, wr1, br1])
+	var wp1 = pawn.new(0, 0, 1, 0, 'w')
+	var wp2 = pawn.new(0, 1, 1, 0, 'w')
+	var wp3 = pawn.new(0, 2, 1, 0, 'w')
+	var wp4 = pawn.new(0, 0, 1, 1, 'w')
+	var wp5 = pawn.new(0, 1, 1, 1, 'w')
+	var wp6 = pawn.new(0, 2, 1, 1, 'w')
+	var wp7 = pawn.new(0, 0, 1, 2, 'w')
+	var wp8 = pawn.new(0, 1, 1, 2, 'w')
+	var wp9 = pawn.new(0, 2, 1, 2, 'w')
+	var wb1 = bishop.new(0, 0, 0, 0, 'w')
+	var wb2 = bishop.new(0, 2, 0, 0, 'w')
+	var wk1 = knight.new(0, 0, 0, 1, 'w')
+	var wk2 = knight.new(0, 2, 0, 1, 'w')
+	var wr1 = rook.new(0, 0, 0, 2, 'w')
+	var wr2 = rook.new(0, 2, 0, 2, 'w')
+	var wk = king.new(0, 1, 0, 0, 'w')
+	var wq = queen.new(0, 1, 0, 1, 'w')
+	var wk3 = knight.new(0, 1, 0, 2, 'w')
+	var bp1 = pawn.new(2, 0, 1, 0, 'b')
+	var bp2 = pawn.new(2, 1, 1, 0, 'b')
+	var bp3 = pawn.new(2, 2, 1, 0, 'b')
+	var bp4 = pawn.new(2, 0, 1, 1, 'b')
+	var bp5 = pawn.new(2, 1, 1, 1, 'b')
+	var bp6 = pawn.new(2, 2, 1, 1, 'b')
+	var bp7 = pawn.new(2, 0, 1, 2, 'b')
+	var bp8 = pawn.new(2, 1, 1, 2, 'b')
+	var bp9 = pawn.new(2, 2, 1, 2, 'b')
+	var bb1 = bishop.new(2, 0, 2, 0, 'b')
+	var bb2 = bishop.new(2, 2, 2, 0, 'b')
+	var bk1 = knight.new(2, 0, 2, 1, 'b')
+	var bk2 = knight.new(2, 2, 2, 1, 'b')
+	var br1 = rook.new(2, 0, 2, 2, 'b')
+	var br2 = rook.new(2, 2, 2, 2, 'b')
+	var bk = king.new(2, 1, 2, 0, 'b')
+	var bq = queen.new(2, 1, 2, 1, 'b')
+	var bk3 = knight.new(2, 1, 2, 2, 'b')
+	place_pieces([wp1, wp2, wp3, wp4, wp5, wp6, wp7, wp8, wp9, wb1, wb2, wk1, wk2, wr1, wr2, wk, wq, wk3])
+	place_pieces([bp1, bp2, bp3, bp4, bp5, bp6, bp7, bp8, bp9, bb1, bb2, bk1, bk2, br1, br2, bk, bq, bk3])
 	
 func place_pieces(ppieces):
 	for piece in ppieces:
 		place_piece(piece)
+		
+func create_new_queen(ppawn):
+	var newqueens = []
+	var pcords = pawn.get_cordinates()
+	newqueens.append(queen.new(pcords[0], pcords[1], pcords[2], pcords[3], ppawn.get_side()))
+	print('lk')
+	place_piece(newqueens[len(newqueens) - 1])
 
 func place_piece(ppiece):
 	var cordinates = ppiece.get_cordinates()
@@ -88,14 +133,48 @@ func reset_clicks():
 	firstclickpiece = null
 	
 func handle_click(ptilearea):
-	if (!firstclickused):
-		if (ptilearea.get_child(0).get_piece().get_type() != 'none'): 
-			set_firstclick(ptilearea)
-	elif (!secondclickused):
-		set_secondclick(ptilearea)
-		firstclickpiece.move(firstclick, secondclick)
-		reset_clicks()
+	if (blackturn):
+		if (!firstclickused):
+			if (ptilearea.get_child(0).get_piece().get_type() != 'none'): 
+				if (ptilearea.get_child(0).get_piece().get_side() == 'b'):
+					set_firstclick(ptilearea)
+		elif (!secondclickused and firstclickpiece.get_side() == 'b'):
+			set_secondclick(ptilearea)
+			if firstclickpiece.move(firstclick, secondclick):
+				blackturn = !blackturn
+			reset_clicks()
+	elif (!blackturn):
+		if (!firstclickused):
+			if (ptilearea.get_child(0).get_piece().get_type() != 'none'):
+				if (ptilearea.get_child(0).get_piece().get_side() == 'w'): 
+					set_firstclick(ptilearea)
+		elif (!secondclickused and firstclickpiece.get_side() == 'w'):
+			set_secondclick(ptilearea)
+			if (firstclickpiece.move(firstclick, secondclick)):
+				blackturn = !blackturn
+			reset_clicks()
+	if (kingIsDead() == 'w'):
+		print("Black wins!")
+	elif (kingIsDead() == 'w'):
+		print("White wins!")
+	print(blackturn)
 		
+func kingIsDead():
+	var bkingdead = true
+	var wkingdead = true
+	for w in range(3):
+		for x in range(3):
+			for y in range(3):
+				for z in range(3):
+					if (tileArray[w][x][y][z].get_piece().get_type() == 'king'):
+						if (tileArray[w][x][y][z].get_piece().get_side() == 'w'):
+							wkingdead = false
+						elif (tileArray[w][x][y][z].get_piece().get_side() == 'b'):
+							bkingdead = false
+	if bkingdead:
+		return 'b'
+	elif wkingdead:
+		return 'w'
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
 #	pass

@@ -28,7 +28,7 @@ func on_click():
 	self.get_parent().handle_click(self)
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	self.position = Vector2(x * 110 + z * 350 + 100, y * 110 + w * 350 + 100)
+	self.position = Vector2(x * 110 + z * 350 + 100, y * 110 + w * 350 + 50)
 
 func get_piece(w, x, y, z):
 	var child = get_child(0)

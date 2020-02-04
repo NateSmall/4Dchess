@@ -35,13 +35,15 @@ func set_cordinates(pwpos, pxpos, pypos, pzpos):
 func get_side():
 	return side
 	
-func move(ptilecurrent, ptiletarget) -> void:
+func move(ptilecurrent, ptiletarget):
 	if (moveValid(ptilecurrent, ptiletarget)):
 		ptiletarget.set_piece(self)
 		var nonepiece = noneclass.new()
 		ptilecurrent.set_piece(nonepiece)
 		var newCords = ptiletarget.get_cordinates()
 		self.set_cordinates(newCords[0], newCords[1], newCords[2], newCords[3])
+		return true
+	return false
 		
 func moveValid(ptilecurrent, ptiletarget):
 	if (ptilecurrent.get_piece().get_type() == 'none'):
@@ -53,6 +55,8 @@ func moveValid(ptilecurrent, ptiletarget):
 func final_tile_valid(ptiletarget):
 	if (ptiletarget.get_piece().get_type() == 'none' or ptiletarget.get_piece().get_side() != side):
 		return true
+	else:
+		return false
 	
 func pathtilesempty(ptilecurrent, ptiletarget):
 	var tcords = ptiletarget.get_cordinates()

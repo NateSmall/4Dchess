@@ -38,14 +38,28 @@ func set_cordinates(pwpos, pxpos, pypos, pzpos):
 func get_side():
 	return side
 
-func move(ptilecurrent, ptiletarget) -> void:
+func move(ptilecurrent, ptiletarget):
 	if (moveValid(ptilecurrent, ptiletarget) or attackValid(ptiletarget)):
 		ptiletarget.set_piece(self)
 		var nonepiece = noneclass.new()
 		ptilecurrent.set_piece(nonepiece)
 		var newCords = ptiletarget.get_cordinates()
 		self.set_cordinates(newCords[0], newCords[1], newCords[2], newCords[3])
+		print('g')
+		if (is_at_end()):
+			print(is_at_end(), 'h')
+			ptiletarget.get_parent().get_parent().create_new_queen(self)
+		return true
+	return false
 		
+func is_at_end():
+	if side == 'b':
+		if (zpos == 0 and ypos == 0):
+			return true
+	elif side == 'w':
+		if (zpos == 2 and ypos == 2):
+			return true
+	return false
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	pass # Replace with function body.
@@ -72,25 +86,24 @@ func pathTileEnemy(ptiletarget):
 # can move 1 tile in w or y
 func validMoveForPiece(ptileTarget):
 	var tcords = ptileTarget.get_cordinates()
-	print(side)
 	if (side == 'b'):
 		var ccords = self.get_cordinates()
 		var dimentionsmoved = 0
 		if (ccords[0] - 1 == tcords[0]):
-			if (ccords[1] == tcords [1] and ccords[3] == tcords[3]):
+			if (ccords[1] == tcords [1] and ccords[3] == tcords[3] and ccords[2] == tcords[2]):
 				return true
 		elif (ccords[2] - 1 == tcords[2]):
-			if (ccords[1] == tcords [1] and ccords[3] == tcords[3]):
+			if (ccords[1] == tcords [1] and ccords[3] == tcords[3] and ccords[0] == tcords[0]):
 				return true
 		return false
 	elif (side == 'w'):
 		var ccords = self.get_cordinates()
 		var dimentionsmoved = 0
 		if (ccords[0] + 1 == tcords[0]):
-			if (ccords[1] == tcords [1] and ccords[3] == tcords[3]):
+			if (ccords[1] == tcords [1] and ccords[3] == tcords[3] and ccords[2] == tcords[2]):
 				return true
 		elif (ccords[2] + 1 == tcords[2]):
-			if (ccords[1] == tcords [1] and ccords[3] == tcords[3]):
+			if (ccords[1] == tcords [1] and ccords[3] == tcords[3] and ccords[0] == tcords[0]):
 				return true
 		return false
 			

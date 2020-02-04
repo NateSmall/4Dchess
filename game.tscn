@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://tileBoard.gd" type="Script" id=1]
 [ext_resource path="res://black_king_icon.png" type="Texture" id=2]
@@ -6,6 +6,9 @@
 [ext_resource path="res://none.gd" type="Script" id=4]
 [ext_resource path="res://rook.gd" type="Script" id=5]
 [ext_resource path="res://bishop.gd" type="Script" id=6]
+[ext_resource path="res://knight.gd" type="Script" id=7]
+[ext_resource path="res://king.gd" type="Script" id=8]
+[ext_resource path="res://queen.gd" type="Script" id=9]
 
 [node name="Node2D" type="Node2D"]
 
@@ -26,3 +29,12 @@ script = ExtResource( 5 )
 
 [node name="bishop" type="Sprite" parent="."]
 script = ExtResource( 6 )
+
+[node name="knight" type="Sprite" parent="."]
+script = ExtResource( 7 )
+
+[node name="king" type="Sprite" parent="."]
+script = ExtResource( 8 )
+
+[node name="queen" type="Sprite" parent="."]
+script = ExtResource( 9 )
