@@ -1,8 +1,7 @@
 extends Sprite
 
 var empty = preload('res://whitetile.png')
-var b_k_txt = preload('res://black_king_icon.png')
-var b_p_txt = preload('res://icon.png')
+var green_tile = preload('green_tile.png')
 
 var wpos
 var xpos
@@ -28,15 +27,13 @@ func set_piece(ppiece) -> void:
 	self.piece = ppiece
 	self.updateTexture()
 
-func gen_piece_type(side, piece):
-	if (self.side == 'black'):
-		if (self.piece.get_type() == 'pawn'):
-			set_texture(b_p_txt)
-		elif(self.piece.get):
-			set_texture(b_k_txt)
+func hilight():
+	self.set_texture(piece.get_highlight_txt())
+
+func unhilight():
+	self.set_texture(piece.get_txt())
 
 func updateTexture():
-	print(piece, " ll ")
 	self.set_texture(piece.get_txt())
 	
 func get_cordinates():

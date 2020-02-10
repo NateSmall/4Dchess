@@ -8,6 +8,7 @@ var piecetexturew = preload('res://wking.jpeg')
 var piecetextureb = preload('res://black_king_icon.png')
 var side
 var noneclass = preload("none.gd")
+var hltxt = preload("green_tile.png")
 
 func _init(pw, px, py, pz, pside):
 	wpos = pw
@@ -15,6 +16,9 @@ func _init(pw, px, py, pz, pside):
 	ypos = py
 	zpos = pz
 	self.side = pside
+
+func get_highlight_txt():
+	return hltxt
 
 func get_txt():
 	if (side == 'b'):

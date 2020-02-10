@@ -1,10 +1,13 @@
 extends Sprite
 
 var txt = preload("res://whitetile.png")
+var hltxt = preload("green_tile.png")
 
 func __init():
 	pass
 
+func get_highlight_txt():
+	return hltxt
 # Declare member variables here. Examples:
 # var a = 2
 # var b = "text"

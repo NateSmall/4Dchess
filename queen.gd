@@ -8,6 +8,7 @@ var piecetexturew = preload('res://wqueen.jpeg')
 var piecetextureb = preload('res://bqueen.jpeg')
 var side
 var noneclass = preload("none.gd")
+var hltxt = preload("green_tile.png")
 
 func _init(pw, px, py, pz, pside):
 	wpos = pw
@@ -15,6 +16,9 @@ func _init(pw, px, py, pz, pside):
 	ypos = py
 	zpos = pz
 	self.side = pside
+
+func get_highlight_txt():
+	return hltxt
 
 func get_txt():
 	if (side == 'b'):
@@ -47,92 +51,241 @@ func move(ptilecurrent, ptiletarget):
 		self.set_cordinates(newCords[0], newCords[1], newCords[2], newCords[3])
 		return true
 	return false
-		
+
 func moveValid(ptilecurrent, ptiletarget):
 	if (ptilecurrent.get_piece().get_type() == 'none'):
 		return false
-	print(pathtilesempty(ptilecurrent, ptiletarget), " > ", final_tile_valid(ptiletarget))
-	if (pathtilesempty(ptilecurrent, ptiletarget) and final_tile_valid(ptiletarget)):
+	if ((pathtilesempty_bish(ptilecurrent, ptiletarget) or pathtilesempty_rook(ptilecurrent, ptiletarget)) and final_tile_valid(ptiletarget)):
 		return true
 	return false
-
-func pathtilesempty(ptilecurrent, ptiletarget):
+	
+func pathtilesempty_rook(ptilecurrent, ptiletarget):
 	var tcords = ptiletarget.get_cordinates()
 	var ccords = self.get_cordinates()
-	var pair = get_direction_pair_to(ptiletarget)
-	var amount_moved_dir1 = tcords[pair[0]] - ccords[pair[0]]
-	var amount_moved_dir2 = tcords[pair[1]] - ccords[pair[1]]
-	print(amount_moved_dir1, " o ", amount_moved_dir2)
-	print(pair)
-	if pair == [-1, -1]:
+	var direc = get_direction_to_rook(ptiletarget)
+	print(direc)
+	if direc == -1:
 		return false
-	elif(pair[1] == -1):
-		for u in range(1, amount_moved_dir1):
-			if pair[0] == 0:
-				var tile_to_check = ptilecurrent.get_parent().get_tile(ccords[0] + u, ccords[1], ccords[2], ccords[3])
-				if tile_to_check.get_piece().get_type() != 'none':
-					return false
-			elif pair[0] == 1:
-				var tile_to_check = ptilecurrent.get_parent().get_tile(ccords[0], ccords[1] + u, ccords[2], ccords[3])
-				if tile_to_check.get_piece().get_type() != 'none':
-					return false
-			elif pair[0] == 2:
-				var tile_to_check = ptilecurrent.get_parent().get_tile(ccords[0], ccords[1], ccords[2] + u, ccords[3])
-				if tile_to_check.get_piece().get_type() != 'none':
-					return false
-			elif pair[0] == 3:
-				var tile_to_check = ptilecurrent.get_parent().get_tile(ccords[0], ccords[1], ccords[2], ccords[3] + u)
-				if tile_to_check.get_piece().get_type() != 'none':
-					return false
-	else:
-		if amount_moved_dir1 == amount_moved_dir2 or amount_moved_dir1 * -1 == amount_moved_dir2:
-			for u in range(1, amount_moved_dir1):
-				if (pair == [0,1]):
-					var tile_to_check = ptilecurrent.get_parent().get_tile(ccords[0] + u, ccords[1] + u, ccords[2], ccords[3])
-					if (tile_to_check.get_piece().get_type() != 'none'):
-						return false
-				elif (pair == [0,2]):
-					var tile_to_check = ptilecurrent.get_parent().get_tile(ccords[0] + u, ccords[1], ccords[2] + u, ccords[3])
-					if (tile_to_check.get_piece().get_type() != 'none'):
-						return false
-				elif (pair == [0,3]):
-					var tile_to_check = ptilecurrent.get_parent().get_tile(ccords[0] + u, ccords[1], ccords[2], ccords[3] + u)
-					if (tile_to_check.get_piece().get_type() != 'none'):
-						return false
-				elif (pair == [1,2]):
-					print('test9 pass : ', u, ' ; ')
-					var tile_to_check = ptilecurrent.get_parent().get_tile(ccords[0], ccords[1] + u, ccords[2] + u, ccords[3])
-					if (tile_to_check.get_piece().get_type() != 'none'):
-						print('test10 fail')
-						return false
-				elif (pair == [1,3]):
-					var tile_to_check = ptilecurrent.get_parent().get_tile(ccords[0], ccords[1] + u, ccords[2], ccords[3] + u)
-					if (tile_to_check.get_piece().get_type() != 'none'):
-						return false
-				elif (pair == [2,3]):
-					var tile_to_check = ptilecurrent.get_parent().get_tile(ccords[0], ccords[1], ccords[2] + u, ccords[3] + u)
-					if (tile_to_check.get_piece().get_type() != 'none'):
-						return false
-		else:
-			return false
+	elif direc == 0:
+		if (ccords[0] + 2 == tcords[0]):
+			var tile_to_check = ptilecurrent.get_parent().get_tile(ccords[0] + 1, ccords[1], ccords[2], ccords[3])
+			if (tile_to_check.get_piece().get_type() != 'none'):
+				return false
+	elif direc == 1:
+		if (ccords[1] + 2 == tcords[1]):
+			var tile_to_check = ptilecurrent.get_parent().get_tile(ccords[0], ccords[1] + 1, ccords[2], ccords[3])
+			if (tile_to_check.get_piece().get_type() != 'none'):
+				return false
+	elif direc == 2:
+		if (ccords[2] + 2 == tcords[2]):
+			var tile_to_check = ptilecurrent.get_parent().get_tile(ccords[0], ccords[1], ccords[2] + 1, ccords[3])
+			if (tile_to_check.get_piece().get_type() != 'none'):
+				return false
+	elif direc == 3:
+		if (ccords[3] + 2 == tcords[3]):
+			var tile_to_check = ptilecurrent.get_parent().get_tile(ccords[0], ccords[1], ccords[2], ccords[3] + 1)
+			if (tile_to_check.get_piece().get_type() != 'none'):
+				return false
+	elif direc == 4:
+		if (ccords[0] - 2 == tcords[0]):
+			var tile_to_check = ptilecurrent.get_parent().get_tile(ccords[0] - 1, ccords[1], ccords[2], ccords[3])
+			if (tile_to_check.get_piece().get_type() != 'none'):
+				return false
+	elif direc == 5:
+		if (ccords[1] - 2 == tcords[1]):
+			var tile_to_check = ptilecurrent.get_parent().get_tile(ccords[0], ccords[1] - 1, ccords[2], ccords[3])
+			if (tile_to_check.get_piece().get_type() != 'none'):
+				return false
+	elif direc == 6:
+		if (ccords[2] - 2 == tcords[2]):
+			var tile_to_check = ptilecurrent.get_parent().get_tile(ccords[0], ccords[1], ccords[2] - 1, ccords[3])
+			if (tile_to_check.get_piece().get_type() != 'none'):
+				return false
+	elif direc == 7:
+		if (ccords[3] - 2 == tcords[3]):
+			var tile_to_check = ptilecurrent.get_parent().get_tile(ccords[0], ccords[1], ccords[2], ccords[3] - 1)
+			if (tile_to_check.get_piece().get_type() != 'none'):
+				return false
 	return true
-		
 	
+func get_direction_to_rook(ptiletarget):
+	var tcords = ptiletarget.get_cordinates()
+	var ccords = self.get_cordinates()
+	var dims_moved = 0
+	for x in range(len(tcords)):
+		if tcords[x] != ccords[x]:
+			dims_moved += 1
+	if (dims_moved != 1):
+		return -1
+	for x in range(len(tcords)):
+		if tcords[x] > ccords[x]: 
+			return x
+		elif tcords[x] < ccords[x]:
+			return 4 + x
+
 func get_direction_pair_to(ptiletarget):
 	#returns two of -1 0 1 2 3
 	var tcords = ptiletarget.get_cordinates()
 	var ccords = self.get_cordinates()
-	print(ccords, " l ", tcords)
 	var dims_moved = 0
 	var pair = [-1, -1]
 	for u in range(len(ccords)):
-		if ccords[u] != tcords[u]:
+		if ccords[u] < tcords[u]:
 			dims_moved += 1
 			for r in range(2):
 				if pair[r] == -1:
 					pair[r] = u
 					break
+		elif ccords[u] > tcords[u]:
+			dims_moved += 1
+			for r in range(2):
+				if pair[r] == -1:
+					pair[r] = u + 4
+					break
 	if dims_moved != 2 and dims_moved != 1:
+		
+		return [-1, -1]
+	else:
+		return pair
+		
+func moveValid_bish(ptilecurrent, ptiletarget):
+	if (ptilecurrent.get_piece().get_type() == 'none'):
+		return false
+	if (pathtilesempty_bish(ptilecurrent, ptiletarget) and final_tile_valid(ptiletarget)):
+		return true
+	return false
+
+func pathtilesempty_bish(ptilecurrent, ptiletarget):
+	var tcords = ptiletarget.get_cordinates()
+	var ccords = self.get_cordinates()
+	var pair = get_direction_pair_to_bish(ptiletarget)
+	var amount_moved_dir1 = tcords[pair[0] % 4] - ccords[pair[0] % 4]
+	var amount_moved_dir2 = tcords[pair[1] % 4] - ccords[pair[1] % 4]
+	if (-1 in pair):
+		return false
+	print(pair)
+	if (amount_moved_dir1 == amount_moved_dir2 or amount_moved_dir1 == -1 * amount_moved_dir2):
+		if (amount_moved_dir1 == 2 or amount_moved_dir1 == -2):
+			if pair == [0, 1]:
+				var tile_to_check = ptilecurrent.get_parent().get_tile(ccords[0] + 1, ccords[1] + 1, ccords[2], ccords[3])
+				if (tile_to_check.get_piece().get_type() != 'none'):
+					return false
+			elif pair == [0, 2]:
+				var tile_to_check = ptilecurrent.get_parent().get_tile(ccords[0] + 1, ccords[1], ccords[2] + 1, ccords[3])
+				if (tile_to_check.get_piece().get_type() != 'none'):
+					return false
+			elif pair == [0, 3]:
+				var tile_to_check = ptilecurrent.get_parent().get_tile(ccords[0] + 1, ccords[1], ccords[2], ccords[3] + 1)
+				if (tile_to_check.get_piece().get_type() != 'none'):
+					return false
+			elif pair == [0, 5]:
+				var tile_to_check = ptilecurrent.get_parent().get_tile(ccords[0] + 1, ccords[1] - 1, ccords[2], ccords[3])
+				if (tile_to_check.get_piece().get_type() != 'none'):
+					return false
+			elif pair == [0, 6]:
+				var tile_to_check = ptilecurrent.get_parent().get_tile(ccords[0] + 1, ccords[1], ccords[2] - 1, ccords[3])
+				if (tile_to_check.get_piece().get_type() != 'none'):
+					return false
+			elif pair == [0, 7]:
+				var tile_to_check = ptilecurrent.get_parent().get_tile(ccords[0] + 1, ccords[1], ccords[2], ccords[3] - 1)
+				if (tile_to_check.get_piece().get_type() != 'none'):
+					return false
+			elif pair == [4, 1]:
+				var tile_to_check = ptilecurrent.get_parent().get_tile(ccords[0] - 1, ccords[1] + 1, ccords[2], ccords[3])
+				if (tile_to_check.get_piece().get_type() != 'none'):
+					return false
+			elif pair == [4, 2]:
+				var tile_to_check = ptilecurrent.get_parent().get_tile(ccords[0] - 1, ccords[1], ccords[2] + 1, ccords[3])
+				if (tile_to_check.get_piece().get_type() != 'none'):
+					return false
+			elif pair == [4, 3]:
+				var tile_to_check = ptilecurrent.get_parent().get_tile(ccords[0] - 1, ccords[1], ccords[2], ccords[3] + 1)
+				if (tile_to_check.get_piece().get_type() != 'none'):
+					return false
+			elif pair == [4, 5]:
+				var tile_to_check = ptilecurrent.get_parent().get_tile(ccords[0] - 1, ccords[1] - 1, ccords[2], ccords[3])
+				if (tile_to_check.get_piece().get_type() != 'none'):
+					return false
+			elif pair == [4, 6]:
+				var tile_to_check = ptilecurrent.get_parent().get_tile(ccords[0] - 1, ccords[1], ccords[2] - 1, ccords[3])
+				if (tile_to_check.get_piece().get_type() != 'none'):
+					return false
+			elif pair == [4, 7]:
+				var tile_to_check = ptilecurrent.get_parent().get_tile(ccords[0] - 1, ccords[1], ccords[2], ccords[3] - 1)
+				if (tile_to_check.get_piece().get_type() != 'none'):
+					return false
+			elif pair == [1, 2]:
+				var tile_to_check = ptilecurrent.get_parent().get_tile(ccords[0], ccords[1] + 1, ccords[2] + 1, ccords[3])
+				if (tile_to_check.get_piece().get_type() != 'none'):
+					return false
+			elif pair == [1, 3]:
+				var tile_to_check = ptilecurrent.get_parent().get_tile(ccords[0], ccords[1] + 1, ccords[2], ccords[3] + 1)
+				if (tile_to_check.get_piece().get_type() != 'none'):
+					return false
+			elif pair == [1, 6]:
+				var tile_to_check = ptilecurrent.get_parent().get_tile(ccords[0], ccords[1] + 1, ccords[2] - 1, ccords[3])
+				if (tile_to_check.get_piece().get_type() != 'none'):
+					return false
+			elif pair == [1, 7]:
+				var tile_to_check = ptilecurrent.get_parent().get_tile(ccords[0], ccords[1] + 1, ccords[2], ccords[3] - 1)
+				if (tile_to_check.get_piece().get_type() != 'none'):
+					return false
+			elif pair == [5, 2]:
+				var tile_to_check = ptilecurrent.get_parent().get_tile(ccords[0], ccords[1] - 1, ccords[2] + 1, ccords[3])
+				if (tile_to_check.get_piece().get_type() != 'none'):
+					return false
+			elif pair == [5, 3]:
+				var tile_to_check = ptilecurrent.get_parent().get_tile(ccords[0], ccords[1] - 1, ccords[2], ccords[3] + 1)
+				if (tile_to_check.get_piece().get_type() != 'none'):
+					return false
+			elif pair == [5, 6]:
+				var tile_to_check = ptilecurrent.get_parent().get_tile(ccords[0], ccords[1] - 1, ccords[2] - 1, ccords[3])
+				if (tile_to_check.get_piece().get_type() != 'none'):
+					return false
+			elif pair == [5, 7]:
+				var tile_to_check = ptilecurrent.get_parent().get_tile(ccords[0], ccords[1] - 1, ccords[2], ccords[3] - 1)
+				if (tile_to_check.get_piece().get_type() != 'none'):
+					return false
+			elif pair == [2, 3]:
+				var tile_to_check = ptilecurrent.get_parent().get_tile(ccords[0] - 1, ccords[1], ccords[2], ccords[3] - 1)
+				if (tile_to_check.get_piece().get_type() != 'none'):
+					return false
+			elif pair == [2, 7]:
+				var tile_to_check = ptilecurrent.get_parent().get_tile(ccords[0], ccords[1] - 1, ccords[2] - 1, ccords[3])
+				if (tile_to_check.get_piece().get_type() != 'none'):
+					return false
+			elif pair == [6, 3]:
+				var tile_to_check = ptilecurrent.get_parent().get_tile(ccords[0], ccords[1] - 1, ccords[2], ccords[3] - 1)
+				if (tile_to_check.get_piece().get_type() != 'none'):
+					return false
+			elif pair == [6, 7]:
+				var tile_to_check = ptilecurrent.get_parent().get_tile(ccords[0], ccords[1], ccords[2] - 1, ccords[3] - 1)
+				if (tile_to_check.get_piece().get_type() != 'none'):
+					return false
+	else:
+		return false
+	return true
+
+func get_direction_pair_to_bish(ptiletarget):
+	#returns two of -1 0 1 2 3
+	var tcords = ptiletarget.get_cordinates()
+	var ccords = self.get_cordinates()
+	var dims_moved = 0
+	var pair = [-1, -1]
+	for u in range(len(ccords)):
+		if ccords[u] < tcords[u]:
+			dims_moved += 1
+			for r in range(2):
+				if pair[r] == -1:
+					pair[r] = u
+					break
+		elif ccords[u] > tcords[u]:
+			dims_moved += 1
+			for r in range(2):
+				if pair[r] == -1:
+					pair[r] = u + 4
+					break
+	if dims_moved != 2:
 		return [-1, -1]
 	else:
 		return pair

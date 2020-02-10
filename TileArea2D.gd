@@ -20,11 +20,10 @@ func _input_event(viewport, event, shape_idx):
 	if event is InputEventMouseButton \
 	and event.button_index == BUTTON_LEFT \
 	and event.is_pressed():
-    	self.on_click()
+		self.on_click()
 
 func on_click():
 	#temp
-	print(get_children())
 	self.get_parent().handle_click(self)
 # Called when the node enters the scene tree for the first time.
 func _ready():

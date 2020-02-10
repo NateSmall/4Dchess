@@ -11,6 +11,7 @@ var piecetexturew = preload('res://wpawn.jpeg')
 var piecetextureb = preload('res://bpawn.jpeg')
 var side
 var noneclass = preload("none.gd")
+var hltxt = preload("green_tile.png")
 
 func _init(pw, px, py, pz, pside):
 	wpos = pw
@@ -38,6 +39,9 @@ func set_cordinates(pwpos, pxpos, pypos, pzpos):
 func get_side():
 	return side
 
+func get_highlight_txt():
+	return hltxt
+
 func move(ptilecurrent, ptiletarget):
 	if (moveValid(ptilecurrent, ptiletarget) or attackValid(ptiletarget)):
 		ptiletarget.set_piece(self)
@@ -45,19 +49,17 @@ func move(ptilecurrent, ptiletarget):
 		ptilecurrent.set_piece(nonepiece)
 		var newCords = ptiletarget.get_cordinates()
 		self.set_cordinates(newCords[0], newCords[1], newCords[2], newCords[3])
-		print('g')
 		if (is_at_end()):
-			print(is_at_end(), 'h')
 			ptiletarget.get_parent().get_parent().create_new_queen(self)
 		return true
 	return false
 		
 func is_at_end():
 	if side == 'b':
-		if (zpos == 0 and ypos == 0):
+		if (wpos == 0 and ypos == 0):
 			return true
 	elif side == 'w':
-		if (zpos == 2 and ypos == 2):
+		if (wpos == 2 and ypos == 2):
 			return true
 	return false
 # Called when the node enters the scene tree for the first time.
@@ -109,12 +111,10 @@ func validMoveForPiece(ptileTarget):
 			
 func validAttackForPiece(ptileTarget):
 	var tcords = ptileTarget.get_cordinates()
-	print(side)
 	var ccords = self.get_cordinates()
 	if (side == 'b'):
 		# if moving forward in w
 		if (ccords[0] - 1 == tcords[0]):
-			print(4)
 			if (ccords[1] + 1 == tcords[1] or ccords[1] - 1 == tcords[1]):
 				if (ccords[3] == tcords[3] and ccords[2] == tcords[2]):
 					return true
@@ -123,7 +123,6 @@ func validAttackForPiece(ptileTarget):
 					return true
 		# if moving forward in y
 		elif (ccords[2] - 1 == tcords[2]):
-			print(3)
 			if (ccords[1] + 1 == tcords[1] or ccords[1] - 1 == tcords[1]):
 				if (ccords[3] == tcords[3] and ccords[0] == tcords[0]):
 					return true
@@ -133,7 +132,6 @@ func validAttackForPiece(ptileTarget):
 	elif (side == 'w'):
 		# if moving forward in w
 		if (ccords[0] + 1 == tcords[0]):
-			print(4)
 			if (ccords[1] + 1 == tcords[1] or ccords[1] - 1 == tcords[1]):
 				if (ccords[3] == tcords[3] and ccords[2] == tcords[2]):
 					return true
@@ -142,7 +140,6 @@ func validAttackForPiece(ptileTarget):
 					return true
 		# if moving forward in y
 		elif (ccords[2] + 1 == tcords[2]):
-			print(3)
 			if (ccords[1] + 1 == tcords[1] or ccords[1] - 1 == tcords[1]):
 				if (ccords[3] == tcords[3] and ccords[0] == tcords[0]):
 					return true

@@ -8,6 +8,7 @@ var piecetexturew = preload('res://wknight.jpeg')
 var piecetextureb = preload('res://bknight.jpeg')
 var side
 var noneclass = preload("none.gd")
+var hltxt = preload("green_tile.png")
 # Declare member variables here. Examples:
 # var a = 2
 # var b = "text"
@@ -27,6 +28,9 @@ func get_txt():
 func get_cordinates():
 	var poslist = [wpos, xpos, ypos, zpos]
 	return poslist
+	
+func get_highlight_txt():
+	return hltxt
 	
 func set_cordinates(pwpos, pxpos, pypos, pzpos):
 	wpos = pwpos

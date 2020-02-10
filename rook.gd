@@ -8,6 +8,7 @@ var piecetextureb = preload("res://brook.jpeg")
 var piecetexturew = preload('res://wrook.jpeg')
 var side
 var noneclass = preload("none.gd")
+var hltxt = preload("green_tile.png")
 
 func _init(pw, px, py, pz, pside):
 	wpos = pw
@@ -15,7 +16,10 @@ func _init(pw, px, py, pz, pside):
 	ypos = py
 	zpos = pz
 	self.side = pside
-	
+
+func get_highlight_txt():
+	return hltxt
+
 func get_txt():
 	if (side == 'b'):
 		return piecetextureb
@@ -62,32 +66,52 @@ func pathtilesempty(ptilecurrent, ptiletarget):
 	var tcords = ptiletarget.get_cordinates()
 	var ccords = self.get_cordinates()
 	var direc = get_direction_to(ptiletarget)
+	print(direc)
 	if direc == -1:
 		return false
-	elif (direc == 0): #w
-		for w in range(ccords[0] + 1, tcords[0]):
-			var tiletocheck = ptilecurrent.get_parent().get_tile(w, ccords[1], ccords[2], ccords[3])
-			if (tiletocheck.get_piece().get_type() != 'none'):
+	elif direc == 0:
+		if (ccords[0] + 2 == tcords[0]):
+			var tile_to_check = ptilecurrent.get_parent().get_tile(ccords[0] + 1, ccords[1], ccords[2], ccords[3])
+			if (tile_to_check.get_piece().get_type() != 'none'):
 				return false
-	elif (direc == 1): #x
-		for x in range(ccords[0] + 1, tcords[0]):
-			var tiletocheck = ptilecurrent.get_parent().get_tile(ccords[0], x, ccords[2], ccords[3])
-			if (tiletocheck.get_piece().get_type() != 'none'):
+	elif direc == 1:
+		if (ccords[1] + 2 == tcords[1]):
+			var tile_to_check = ptilecurrent.get_parent().get_tile(ccords[0], ccords[1] + 1, ccords[2], ccords[3])
+			if (tile_to_check.get_piece().get_type() != 'none'):
 				return false
-	elif (direc == 2):
-		for y in range(ccords[0] + 1, tcords[0]):
-			var tiletocheck = ptilecurrent.get_parent().get_tile(ccords[0], ccords[1], y, ccords[3])
-			if (tiletocheck.get_piece().get_type() != 'none'):
+	elif direc == 2:
+		if (ccords[2] + 2 == tcords[2]):
+			var tile_to_check = ptilecurrent.get_parent().get_tile(ccords[0], ccords[1], ccords[2] + 1, ccords[3])
+			if (tile_to_check.get_piece().get_type() != 'none'):
 				return false
-	elif (direc == 3):
-		for z in range(ccords[0] + 1, tcords[0]):
-			var tiletocheck = ptilecurrent.get_parent().get_tile(ccords[0], ccords[1], ccords[2], z)
-			if (tiletocheck.get_piece().get_type() != 'none'):
+	elif direc == 3:
+		if (ccords[3] + 2 == tcords[3]):
+			var tile_to_check = ptilecurrent.get_parent().get_tile(ccords[0], ccords[1], ccords[2], ccords[3] + 1)
+			if (tile_to_check.get_piece().get_type() != 'none'):
+				return false
+	elif direc == 4:
+		if (ccords[0] - 2 == tcords[0]):
+			var tile_to_check = ptilecurrent.get_parent().get_tile(ccords[0] - 1, ccords[1], ccords[2], ccords[3])
+			if (tile_to_check.get_piece().get_type() != 'none'):
+				return false
+	elif direc == 5:
+		if (ccords[1] - 2 == tcords[1]):
+			var tile_to_check = ptilecurrent.get_parent().get_tile(ccords[0], ccords[1] - 1, ccords[2], ccords[3])
+			if (tile_to_check.get_piece().get_type() != 'none'):
+				return false
+	elif direc == 6:
+		if (ccords[2] - 2 == tcords[2]):
+			var tile_to_check = ptilecurrent.get_parent().get_tile(ccords[0], ccords[1], ccords[2] - 1, ccords[3])
+			if (tile_to_check.get_piece().get_type() != 'none'):
+				return false
+	elif direc == 7:
+		if (ccords[3] - 2 == tcords[3]):
+			var tile_to_check = ptilecurrent.get_parent().get_tile(ccords[0], ccords[1], ccords[2], ccords[3] - 1)
+			if (tile_to_check.get_piece().get_type() != 'none'):
 				return false
 	return true
 	
 func get_direction_to(ptiletarget):
-	#returns -1 0 1 2 3
 	var tcords = ptiletarget.get_cordinates()
 	var ccords = self.get_cordinates()
 	var dims_moved = 0
@@ -97,9 +121,10 @@ func get_direction_to(ptiletarget):
 	if (dims_moved != 1):
 		return -1
 	for x in range(len(tcords)):
-		if tcords[x] != ccords[x]: 
+		if tcords[x] > ccords[x]: 
 			return x
-	return dims_moved
+		elif tcords[x] < ccords[x]:
+			return 4 + x
 
 func get_type():
 	return 'rook'
