@@ -8,10 +8,14 @@ var piecetexturew = preload('res://wbishop.jpeg')
 var piecetextureb = preload('res://bbishop.jpeg')
 var side
 var noneclass = preload("none.gd")
-var hltxt = preload("green_tile.png")
+var hltxtw = preload("HLwbish.png")
+var hltxtb = preload("HLbbish.png")
 
 func get_highlight_txt():
-	return hltxt
+	if (side == 'b'):
+		return hltxtb
+	else:
+		return hltxtw
 
 func _init(pw, px, py, pz, pside):
 	wpos = pw

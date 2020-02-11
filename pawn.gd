@@ -11,7 +11,8 @@ var piecetexturew = preload('res://wpawn.jpeg')
 var piecetextureb = preload('res://bpawn.jpeg')
 var side
 var noneclass = preload("none.gd")
-var hltxt = preload("green_tile.png")
+var hltxtb = preload("HLbpawn.png")
+var hltxtw = preload("HLwpawn.png")
 
 func _init(pw, px, py, pz, pside):
 	wpos = pw
@@ -40,7 +41,10 @@ func get_side():
 	return side
 
 func get_highlight_txt():
-	return hltxt
+	if (side == 'b'):
+		return hltxtb
+	else:
+		return hltxtw
 
 func move(ptilecurrent, ptiletarget):
 	if (moveValid(ptilecurrent, ptiletarget) or attackValid(ptiletarget)):
